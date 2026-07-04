@@ -1,0 +1,330 @@
+--- Pagina 1 ---
+UNIDAD 8
+Diseño de Software Avanzado
+Principios, Patrones y Experiencia de Usuario
+--- Pagina 2 ---
+Agenda de la Sesión - Parte I
+8.1 Introducción al Diseño 8.2 Estrategias de Diseño
+8.1.1 Conceptos Fundamentales 8.3 Diseño Orientado a Objetos
+8.1.2 Diseño vs Requisitos 8.4 Diseño Orientado a Datos
+8.1.3 Acoplamiento y Cohesión 8.5 Trazabilidad en Arquitectura
+8.1.3 Principios SOLID 8.6 Introducción a Patrones
+--- Pagina 3 ---
+Agenda de la Sesión - Parte II
+8.6.1 Patrones Creacionales 8.7.2 Máquinas de Estado
+8.6.2 Patrones Estructurales 8.8 Sistemas por Eventos
+8.6.3 Patrones de Comportamiento 8.9 Experiencia de Usuario (UX)
+8.7 Sistemas Interactivos 8.9.1 Técnicas Diseño Visual
+8.7.1 Diagramas de Secuencia 8.9.1.1 Diseño Inclusivo
+--- Pagina 4 ---
+Agenda de la Sesión - Parte III
+8.9.1.2 Interfaces de Voz 8.9.4.1 UX Moderno
+8.9.1.3 Mobile-First 8.9.4.2 UI Moderno
+8.9.2 Modalidades de Interfaz 8.9.4.3 Heurísticas de Nielsen
+8.9.3 Patrones de Diseño UX 8.10 Evaluación de Diseño
+8.9.4 Tendencias Web Práctica Integral
+--- Pagina 5 ---
+8.1 El Arte del Diseño de Software
+El diseño de software es el proceso de transformar el "qué"
+(requisitos) en el "cómo" (una estructura técnica implementable).
+Objetivos Principales:
+• Mantenibilidad a largo plazo.
+• Eficiencia en el uso de recursos.
+• Escalabilidad ante el cambio.
+• Comprensibilidad para el equipo.
+--- Pagina 6 ---
+Concepto: Abstracción
+La abstracción permite ocultar los detalles de implementación complejos para enfocarse en la funcionalidad esencial. Es la
+herramienta fundamental para manejar la complejidad.
+Ejemplo 1: Control de Ejemplo 2: Interfaz de
+IMnvoednetalarimo os una "Venta" sin preocuparnos inicialmente por la UUsnu a"Briootón" abstrae la lógica de dibujo en pantalla y el manejo
+lógica de hilos o protocolos de red en el nivel conceptual. de interrupciones del hardware.
+--- Pagina 7 ---
+Concepto: Modularidad
+Dividir el software en componentes independientes (módulos) con interfaces claras.
+Ventaja 1: Paralelismo Ventaja 2: Aislamiento
+Diferentes equipos pueden trabajar en el módulo de Un error en el módulo de "Reportes" no debería detener la
+"Pagos" y "Catálogo" simultáneamente si las interfaces operación del módulo de "Facturación".
+están bien definidas.
+--- Pagina 8 ---
+Concepto: Ocultamiento (Information Hiding)
+David Parnas definió este principio como la base de la modularidad. Un módulo solo debe exponer lo necesario a través de su interfaz.
+Ejemplo 1: El acceso a una base de datos se oculta detrás de un objeto DAO (Data Access Object). Si cambiamos de SQL a NoSQL, el resto del sistema no se
+eEnjetmerpal.o 2: Una librería de cálculo matemático oculta los algoritmos de aproximación; el usuario solo recibe el resultado final.
+--- Pagina 9 ---
+8.1.2 Interacción Diseño vs Requisitos
+El diseño retroalimenta a los requisitos. A menudo, las
+limitaciones técnicas descubiertas en el diseño obligan a
+renegociar el alcance del producto.
+• Requisitos Funcionales: Definen la estructura lógica.
+• Requisitos No Funcionales: Dictan la arquitectura física
+(Uptime, Latencia).
+--- Pagina 10 ---
+Mapeo de Requisitos al Diseño
+Técnica de Escenarios
+Se crean casos de prueba basados en requisitos para validar si el diseño arquitectónico propuesto puede cumplirlos
+eficientemente.
+Requisito: Procesar 10,000 transacciones/sec.
+Diseño: Se opta por una cola de mensajes (RabbitMQ) y procesamiento asíncrono.
+--- Pagina 11 ---
+8.1.3 Principio: Bajo Acoplamiento
+El acoplamiento mide la dependencia entre módulos. El objetivo
+es que sea lo más bajo posible para permitir cambios locales sin
+efectos globales.
+Nivel Ideal: Acoplamiento de Datos Los módulos se comunican solo pasando
+parámetros simples.
+--- Pagina 12 ---
+Tipos de Acoplamiento (De Mejor a Peor)
+1. De Datos 2. De Sello (Stamp)
+Módulos comparten solo datos necesarios mediante Módulos comparten estructuras de datos complejas.
+parámetros. Ej: Pasar un objeto `User` completo cuando solo se
+Ej: `calculateTotal(price, tax)`. necesita el `email`.
+--- Pagina 13 ---
+Tipos de Acoplamiento Críticos
+Acoplamiento de Control
+Un módulo le dice a otro qué hacer pasando "flags" de control.
+Ej: `processOrder(order, isInternational)`. Crea dependencias de lógica interna.
+Acoplamiento de Contenido (Peor)
+Un módulo accede y modifica los datos internos de otro módulo directamente. Rompe totalmente la encapsulación.
+--- Pagina 14 ---
+Principio: Alta Cohesión
+La cohesión mide qué tan enfocadas están las responsabilidades dentro de un mismo módulo. Un módulo cohesivo hace "una sola cosa y
+la hace bien".
+Cohesión Funcional (Ideal) Cohesión Coincidental (Evitar)
+Todas las partes del módulo contribuyen a una única tarea El módulo agrupa tareas sin relación alguna, solo por
+bien definida. conveniencia de archivo.
+--- Pagina 15 ---
+Tipos de Cohesión Intermedia
+Tipo Descripción
+Secuencial La salida de una parte es la entrada de la siguiente.
+Comunicacional Partes que operan sobre los mismos datos.
+Temporal Tareas que deben ocurrir al mismo tiempo (ej: Inicio de sistema).
+--- Pagina 16 ---
+Principios SOLID
+Acrónimo introducido por Robert C. Martin para facilitar el
+diseño de software mantenible y escalable.
+S - Single Responsibility
+O - Open/Closed
+L - Liskov Substitution
+I - Interface Segregation
+D - Dependency Inversion
+--- Pagina 17 ---
+S: Responsabilidad Única (SRP)
+"Una clase debería tener una única razón para cambiar".
+Violación: Una clase `Invoice` que calcula el total, lo guarda en la base de datos y lo imprime en PDF. Si cambia el formato del PDF, la clase cambia. Si
+cambia la DB, la clase cambia.
+Solución: Separar en `Invoice` (datos), `InvoiceRepository` (persistencia) e `InvoicePrinter` (presentación).
+--- Pagina 18 ---
+O: Abierto/Cerrado (OCP)
+"Entidades de software abiertas para extensión, pero cerradas para modificación".
+Técnica: Polimorfismo
+En lugar de usar un `switch` gigante para calcular descuentos por tipo de cliente, creamos una interfaz `DiscountStrategy` y cada
+tipo de cliente implementa su propia lógica.
+Resultado: Añadir un nuevo tipo de descuento no requiere tocar el código existente.
+--- Pagina 19 ---
+L: Sustitución de Liskov (LSP)
+"Si S es un subtipo de T, los objetos de tipo T pueden reemplazarse por objetos de tipo S sin alterar el programa".
+Violación clásica: El problema del Rectángulo y el Cuadrado. Si `Square` hereda de `Rectangle`, pero al setear el ancho también cambia el alto, rompe la lógica de
+quien espera un `Rectangle`.
+--- Pagina 20 ---
+I: Segregación de Interfaces (ISP)
+"Los clientes no deben ser obligados a depender de interfaces que no utilizan".
+Interfaz Gorda Interfaz Segregada
+Una interfaz `Worker` con `work()` y `eat()`. Un robot Interfaces `Workable` y `Feedable`. El robot solo
+implementa `Worker` pero no puede comer. implementa `Workable`.
+--- Pagina 21 ---
+D: Inversión de Dependencias (DIP)
+"Depender de abstracciones, no de concreciones".
+Arquitectura: El módulo de alto nivel (Lógica de Negocio) no debe importar el módulo de bajo nivel (Acceso a Disco). Ambos deben importar una Interfaz
+compartida.
+Esto permite cambiar el almacenamiento (SQL a Cloud Storage) sin tocar la lógica de negocio.
+--- Pagina 22 ---
+Impacto de SOLID en el Ciclo de Vida
+Principio Fase Beneficiada
+SRP Pruebas Unitarias y Debugging
+OCP Evolución y Escalabilidad
+LSP Robustez del Sistema
+ISP Desacoplamiento de Módulos
+DIP Mantenibilidad e Intercambiabilidad
+--- Pagina 23 ---
+8.2 Estrategia: Diseño Top-Down
+Se parte del nivel de abstracción más alto (la aplicación completa) y se descompone en subniveles cada vez más detallados.
+Proceso de Refinamiento
+1. Definir funciones principales.
+2. Dividir en subsistemas.
+3. Especificar módulos de bajo nivel.
+Riesgo: Se pueden ignorar limitaciones técnicas de bajo nivel hasta muy tarde en el proyecto.
+--- Pagina 24 ---
+8.2 Estrategia: Diseño Bottom-Up
+Se diseñan primero los componentes base (librerías, utilidades) y luego se ensamblan para formar el sistema superior.
+Ventaja Desventaja
+Componentes base muy probados y genéricos El sistema final puede no ajustarse perfectamente a las
+(reutilizables). necesidades del usuario al ser una "suma de partes".
+--- Pagina 25 ---
+8.3 Diseño Orientado a Objetos
+Visualiza el sistema como una red de objetos que colaboran
+enviándose mensajes.
+Pilares:
+• Encapsulamiento: Datos y métodos juntos.
+• Herencia: Reutilización de jerarquías.
+• Polimorfismo: Interfaces uniformes para tipos distintos.
+--- Pagina 26 ---
+Colaboración entre Objetos
+En el DOO, el foco no está en los datos pasivos, sino en la interacción. Los objetos tienen Estado (atributos) y Comportamiento
+(métodos).
+Escenario: Un objeto `PaymentGateway` envía un mensaje `validate()` a un objeto `CreditCard`. Si la validación falla, `PaymentGateway` lanza un evento de
+excepción.
+--- Pagina 27 ---
+8.4 Diseño Orientado a Datos
+El foco principal es la estructura de los datos y su persistencia.
+Común en sistemas de gestión de información empresarial.
+Etapas:
+1 Modelado Entidad-Relación (E-R).
+.
+2 Normalización (Eliminar redundancia).
+.
+3 Esquema Físico (Indexación, Particionamiento).
+.
+--- Pagina 28 ---
+Importancia de la Normalización
+Integridad Desnormalización
+Evita anomalías de actualización. Si un cliente cambia de En sistemas modernos de Big Data, a veces se prefiere
+dirección, se cambia en un solo lugar. repetir datos para ganar velocidad de lectura.
+--- Pagina 29 ---
+8.5 Trazabilidad de Requisitos
+Asegura que cada requisito funcional tenga una contraparte en el diseño y viceversa.
+Matriz de Trazabilidad
+Un documento que mapea: [ID Requisito] -> [ID Componente de Arquitectura] -> [ID Clase de Diseño].
+Utilidad: Si un requisito cambia, sabemos exactamente qué clases y módulos debemos revisar.
+--- Pagina 30 ---
+8.6 Patrones de Diseño (GoF)
+Soluciones probadas a problemas comunes de diseño de
+software. Introducidos por la "Banda de los Cuatro" (Gamma,
+Helm, Johnson, Vlissides).
+Categorías:
+• Creacionales.
+• Estructurales.
+• De Comportamiento.
+--- Pagina 31 ---
+Patrón Singleton
+Garantiza que una clase tenga una única instancia en toda la
+aplicación.
+Uso: Logger centralizado, Conexión a Base de Datos única, Gestor de
+Configuración.
+--- Pagina 32 ---
+Patrón Factory Method
+Define una interfaz para crear objetos, pero permite a las
+subclases decidir qué clase instanciar.
+Uso: Un generador de documentos que crea PDFs o Excel dependiendo del
+input del usuario, sin que el cliente conozca las clases concretas.
+--- Pagina 33 ---
+Patrón Builder
+Separa la construcción de un objeto complejo de su representación, permitiendo que el mismo proceso de construcción cree
+representaciones diferentes.
+Ejemplo: Construir una "Pizza" paso a paso (masa, salsa, ingredientes) evitando constructores con 15 parámetros opcionales.
+--- Pagina 34 ---
+8.6.2 Patrones Estructurales: Adapter
+Convierte la interfaz de una clase en otra interfaz que el cliente
+espera.
+Uso: Usar una librería externa de analíticas que tiene métodos distintos a
+nuestra interfaz interna de monitoreo.
+--- Pagina 35 ---
+Patrón Facade (Fachada)
+Proporciona una interfaz unificada y simple para un conjunto de interfaces en un subsistema complejo.
+Caso: Sistema de Home Theater
+La fachada `HomeTheaterFacade` tiene un método `watchMovie()` que internamente enciende las luces, baja el telón, arranca el
+proyector y pone el sonido envolvente.
+--- Pagina 36 ---
+8.6.3 Patrones de Comportamiento: Observer
+Define una dependencia de uno a muchos para que cuando un
+objeto cambie de estado, todos sus dependientes sean
+notificados automáticamente.
+Uso: Suscriptores de un newsletter, Actualización de una gráfica cuando
+cambian los datos de la tabla.
+--- Pagina 37 ---
+Patrón Strategy
+Define una familia de algoritmos, encapsula cada uno y los hace intercambiables en tiempo de ejecución.
+Ejemplo: Un sistema de navegación que puede usar estrategias de ruta "Más corta", "Más rápida" o "Sin peajes" dependiendo de la selección del usuario.
+--- Pagina 38 ---
+8.7 Sistemas Interactivos
+Se centran en la comunicación entre el usuario y la máquina, o entre diferentes capas del sistema en tiempo real.
+Herramientas de Modelado Dinámico:
+• Diagramas de Secuencia (Temporalidad).
+• Diagramas de Máquina de Estado (Comportamiento reactivo).
+--- Pagina 39 ---
+8.7.1 Diagramas de Secuencia
+Muestran la interacción de objetos organizados en una secuencia
+temporal. Son vitales para entender flujos de casos de uso
+complejos.
+Elementos:
+• Línea de vida (Lifelines).
+• Mensajes (Síncronos/Asíncronos).
+• Activaciones.
+--- Pagina 40 ---
+8.7.2 Máquinas de Estado
+Modelan el ciclo de vida de un objeto reactivo. Un estado cambia
+a otro impulsado por un Evento.
+Caso: Pedido [Nuevo] --(Pago recibido)--> [Pagado] --(Enviado)-->
+[Entregado].
+--- Pagina 41 ---
+8.8 Sistemas Impulsados por Eventos
+Arquitectura desacoplada donde los componentes reaccionan a
+la publicación de sucesos (Eventos) en lugar de llamarse
+directamente.
+Broker de Mensajes: Kafka o RabbitMQ actúan como intermediarios.
+--- Pagina 42 ---
+8.9 Experiencia de Usuario (UX)
+UX es la percepción y respuesta de una persona al usar un
+producto. No es solo "colores"; es flujo, utilidad y accesibilidad.
+Diferencia Clave:
+UX: Cómo funciona.
+UI: Cómo se ve.
+--- Pagina 43 ---
+8.9.1.1 Diseño Inclusivo
+Diseñar para la diversidad humana: edad, habilidades, cultura e
+idioma.
+Práctica: Asegurar que los contrastes de color sean suficientes para personas
+con daltonismo.
+--- Pagina 44 ---
+8.9.1.3 Diseño Mobile-First
+Estrategia de diseñar primero para la pantalla pequeña y escalar
+hacia arriba. Prioriza el contenido crítico.
+Ventaja: Limita el desorden visual (clutter) desde el inicio.
+--- Pagina 45 ---
+8.9.3 Patrones de Diseño UX
+Estructuras de interfaz familiares para el usuario que facilitan el
+aprendizaje.
+• Onboarding: Guía al nuevo usuario.
+• Search & Filter: Para grandes catálogos.
+• Wizard: Pasos guiados para procesos complejos.
+--- Pagina 46 ---
+Heurísticas de Jakob Nielsen (1-5)
+1 Visibilidad del estado del sistema.
+.
+2 Relación entre el sistema y el mundo real.
+.
+3 Control y libertad del usuario.
+.
+4 Consistencia y estándares.
+.
+5 Prevención de errores.
+.
+--- Pagina 47 ---
+Heurísticas de Jakob Nielsen (6-10)
+1 Reconocer en lugar de recordar.
+.
+2 Flexibilidad y eficiencia de uso.
+.
+3 Estética y diseño minimalista.
+.
+4 Ayudar a los usuarios a reconocer, diagnosticar y recuperarse de errores.
+.
+5 Ayuda y documentación.
+.
+--- Pagina 48 ---
+8.10 Evaluación de Diseño
+Procesos para validar si el diseño cumple con los objetivos de
+usabilidad y funcionalidad antes del desarrollo final.
+• Pruebas de Usuario (User Testing).
+• Inspecciones Heurísticas.
+• Recorridos Cognitivos.
